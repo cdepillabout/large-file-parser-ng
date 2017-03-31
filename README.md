@@ -138,7 +138,7 @@ I asked two questions on Stack Overflow about it:
 
 ## Hybrid Approach
 
-The best solution might be some sort of hybrid approach of the streaming Parser
+The best solution might be some sort of hybrid approach of the streaming parser
 and smart parser.  You might be able to write a Parsec-like parser that gets
 input from a conduit `Producer` and sends data to a conduit `Consumer`.
 
