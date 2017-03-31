@@ -39,7 +39,7 @@ executable large-file-writer
 executable large-file-dumb-parser
   hs-source-dirs:      app
   main-is:             DumbFileParser.hs
-  ghc-options:         -threaded -rtsopts -with-rtsopts=-N -Wall -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates -fwarn-monomorphism-restriction
+  ghc-options:         -O2 -threaded -rtsopts -with-rtsopts=-N -Wall -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates -fwarn-monomorphism-restriction
   build-depends:       base
                      , bytestring
                      , large-file-parser-ng
@@ -50,17 +50,25 @@ executable large-file-dumb-parser
 executable large-file-streaming-parser
   hs-source-dirs:      app
   main-is:             StreamingFileParser.hs
-  ghc-options:         -threaded -rtsopts -with-rtsopts=-N -Wall -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates -fwarn-monomorphism-restriction
+  ghc-options:         -O2 -threaded -rtsopts -with-rtsopts=-N -Wall -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates -fwarn-monomorphism-restriction
   build-depends:       base
                      , attoparsec
-                     -- , bytestring
                      , conduit-combinators
                      , conduit-extra
                      , exceptions
                      , monad-control
                      , large-file-parser-ng
                      , resourcet
-                     -- , text
+  default-language:    Haskell2010
+
+executable large-file-smart-parser
+  hs-source-dirs:      app
+  main-is:             SmartFileParser.hs
+  ghc-options:         -O2 -threaded -rtsopts -with-rtsopts=-N -Wall -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates -fwarn-monomorphism-restriction
+  build-depends:       base
+                     , large-file-parser-ng
+                     , parsec
+                     , text
   default-language:    Haskell2010
 
 test-suite large-file-parser-ng-test
