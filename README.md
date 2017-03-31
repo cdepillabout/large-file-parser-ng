@@ -11,4 +11,10 @@ $ stack exec -- large-file-writer
 
 ```sh
 $ stack exec -- large-file-dumb-parser
+Successfully parsed.
+```
+
+```sh
+$ stack exec -- large-file-streaming-parser
+Succeed
 ```
