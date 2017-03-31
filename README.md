@@ -72,7 +72,8 @@ killed.
 ## Streaming Parser
 
 `large-file-streaming-parser` is based on Conduit.  It streams lines from the
-file and handles them one-at-a-time.
+file and handles them one-at-a-time.  The source is in
+[StreamingFileParser.hs](app/StreamingFileParser.hs).
 
 ```sh
 $ time stack exec -- large-file-streaming-parser
