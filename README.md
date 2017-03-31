@@ -2,7 +2,7 @@
 Parsing Large Files
 ====================
 
-This repository contains a couple executables that show different ways to parse
+This repository contains a couple executables showing different ways to parse
 large files.
 
 The two basic techniques are to use lazy IO (which is shown in the "Smart
@@ -48,6 +48,15 @@ this:
 
 ## Dumb File Parser
 
+`large-file-dumb-parser` is a standard parsec parser.  It returns a `FullFile`
+type (which is defined in [Types.hs](src/Types.hs)).  The source is in
+[DumbFileParser.hs](app/DumbFileParser.hs).
+
+It is "dumb" because it reads all of the input into memory, then turns it into
+a data structure in memory.
+
+You can run it with the following command:
+
 ```sh
 $ time stack exec -- large-file-dumb-parser
 Killed
@@ -55,44 +64,80 @@ Killed
 real    1m10.517s
 user    0m43.810s
 sys     0m44.553s
-i
 ```
 
+The system runs out of memory after a minute and `large-file-dumb-parser` gets
+killed.
 
+## Streaming Parser
 
-```sh
-$ stack exec -- large-file-dumb-parser +RTS -M10M
-large-file-dumb-parser: Heap exhausted;
-large-file-dumb-parser: Current maximum heap size is 10485760 bytes (10 MB).
-large-file-dumb-parser: Use `+RTS -M<size>' to increase it.
-```
+`large-file-streaming-parser` is based on Conduit.  It streams lines from the
+file and handles them one-at-a-time.
 
 ```sh
 $ time stack exec -- large-file-streaming-parser
 Succeed
 
-real    0m1.721s
-user    0m1.433s
-sys     0m0.687s
+real    0m6.769s
+user    0m4.370s
+sys     0m2.473s
 ```
+
+Using the `RTS` options of the Haskell runtime,  we can tell the Haskell
+runtime to make sure it doesn't use more than a megabyte of heap space.  With
+this option, we know that `large-file-streaming-parser` is able to run in
+constant heap space.  This makes sense, since it is only operating on the file
+one line at at time:
 
 ```sh
 $ stack exec -- large-file-streaming-parser +RTS -M1M
 Succeed
 ```
 
+The big downside of `large-file-streaming-parser` is that it is somewhat more
+hacky than a Parsec parser.  Operating on a file line-by-line is similar to how
+a parser would be written in an imperative lanuage.  Ideally, we would have a
+Parsec-like parser that runs in constant memory.
+
+## Smart Parser
+
+`large-file-smart-parser` is a Parsec parser that runs in constant memory using
+lazy IO.  The source is in [SmartFileParser.hs](app/SmartFileParser.hs).
 
 ```sh
 $ time stack exec -- large-file-smart-parser
 Successfully parsed.
 
-real    0m6.491s
-user    0m5.880s
-sys     0m1.713s
+real    0m51.958s
+user    0m41.947s
+sys     0m20.097s
 ```
 
+Make sure it runs in constant memory:
 
 ```
 $ stack exec -- large-file-smart-parser +RTS -M1M
 Successfully parsed.
 ```
+
+`large-file-smart-parser` also runs in constant memory.  It is much easier to
+understand than the streaming parser.  It relies on lazy IO to read in the file
+as a `String`.  It does not accumulate any memory while parsing the file.
+
+### manyLength
+
+As an aside, I actually had a lot of trouble writing the [`manyLength`]()
+function in [SmartFileParser.hs](app/SmartFileParser.hs).
+
+I asked two questions on Stack Overflow about it:
+
+- https://stackoverflow.com/questions/43092461/heap-usage-for-cps-vs-non-cps-parsers-in-haskells-parsec
+- https://stackoverflow.com/questions/43119278/how-to-tell-whether-parsec-parser-uses-constant-heap-space-in-haskell
+
+## Hybrid Approach
+
+The best solution might be some sort of hybrid approach of the streaming Parser
+and smart parser.  You might be able to write a Parsec-like parser that gets
+input from a conduit `Producer` and sends data to a conduit `Consumer`.
+
+This might give you both speed and simplicity.
