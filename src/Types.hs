@@ -11,7 +11,7 @@ exampleFile :: FilePath
 exampleFile = "big-example-file"
 
 totalLines :: Int
-totalLines = 1000000
+totalLines = 10000000
 
 data HeaderLine = HL
   deriving (Data, Eq, Read, Show, Typeable)

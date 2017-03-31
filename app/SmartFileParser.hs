@@ -23,14 +23,6 @@ import Types
 
 type Parser = ParsecT String () IO
 
--- manyLength :: forall s u m a. ParsecT s u m a -> ParsecT s u m Int
--- manyLength p = go 0
---   where
---     go :: Int -> ParsecT s u m Int
---     go !i =
---       ((p *> pure True) <|> pure False) >>=
---         \success -> if success then go (i+1) else pure i
-
 manyLength :: forall s u m a. ParsecT s u m a -> ParsecT s u m Int
 manyLength p = go 0
   where
