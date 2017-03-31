@@ -127,7 +127,8 @@ as a `String`.  It does not accumulate any memory while parsing the file.
 
 ### manyLength
 
-As an aside, I actually had a lot of trouble writing the [`manyLength`]()
+As an aside, I actually had a lot of trouble writing the
+[`manyLength`](https://github.com/cdepillabout/large-file-parser-ng/blob/abdb4b40b93b62835fc1e547dce9e46ada8c1901/app/SmartFileParser.hs#L26)
 function in [SmartFileParser.hs](app/SmartFileParser.hs).
 
 I asked two questions on Stack Overflow about it:
