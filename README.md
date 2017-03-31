@@ -66,7 +66,7 @@ user    0m43.810s
 sys     0m44.553s
 ```
 
-The system runs out of memory after a minute and `large-file-dumb-parser` gets
+The system runs out of memory after a minute and `large-file-dumb-parser` is
 killed.
 
 ## Streaming Parser
